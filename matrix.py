@@ -1,20 +1,16 @@
 import copy
 
-
 class Matrix:
     def __init__(self, rows, cols):
         self.rows = rows
         self.cols = cols
-        self.matrix = []
+        self.matrix = [[] for i in range(self.rows)]
 
     def grab_elements(self):
-        """Function responsible for creating a list of values, from number of lines
-        of input equal number of rows"""
         for i in range(self.rows):
-            self.matrix[i] = [int(el) if '.' not in el else float(el) for el in input().split()]
+            self.matrix[i] = [eval(el) for el in input().split()]
 
     def __add__(self, other):
-        """Addition function, capable of adding two matrices together"""
         # checking, if other is also a matrix
         if isinstance(other, Matrix):
             #  checking, if matrices can be added
@@ -110,8 +106,10 @@ class Matrix:
         result = 0
         for k in range(self.cols):
             new_matrix = Matrix(self.rows - 1, self.cols - 1)
-            temp_array = copy.deepcopy(self.matrix)
-
+            temp_array = [[] for i in range(self.rows)]
+            for i in range(len(self.matrix)):
+                for j in range(len(self.matrix[i])):
+                    temp_array[i].append(self.matrix[i][j])
             for row in temp_array:
                 row.pop(k)
 
@@ -121,7 +119,6 @@ class Matrix:
         return result
 
     def inverse(self):
-        """Function inversing the matrix, using the analytic solution"""
         det = self.determinant()
 
         if det in (0, None):
@@ -130,6 +127,7 @@ class Matrix:
 
         adjoint = Matrix(self.rows, self.cols)
         adjoint.matrix = [[None for i in range(self.cols)] for j in range(self.rows)]
+
 
         for i in range(self.rows):
             for j in range(self.cols):
@@ -145,129 +143,3 @@ class Matrix:
         adjoint = adjoint.transpose('main')
 
         return adjoint * (1 / det)
-
-
-def choices():
-    print('1. Add matrices')
-    print('2. Multiply matrix by a constant')
-    print('3. Multiply matrices')
-    print('4. Transpose matrix')
-    print('5. Calculate a determinant')
-    print('0. Exit')
-
-    try:
-        choice = int(input('Your choice: '))
-    except ValueError:
-        print('Choice must be a single digit')
-        return choices()
-
-    if choice not in [1, 2, 3, 4, 5, 6, 0]:
-        print('Not a viable choice')
-        return choices()
-
-    return choice
-
-
-def trans_choices():
-    print('1. Main diagonal')
-    print('2. Side diagonal')
-    print('3. Vertical line')
-    print('4. Horizontal line')
-
-    try:
-        axis = int(input('Your choice: '))
-    except ValueError:
-        print('Choice must be a single digit')
-        return trans_choices()
-
-    if axis not in (1, 2, 3, 4):
-        print('Not a viable choice')
-        return trans_choices()
-
-    if axis == 1:
-        return 'main'
-    if axis == 2:
-        return 'side'
-    if axis == 3:
-        return 'vertical'
-    if axis == 4:
-        return 'horizontal'
-
-
-def main():
-    while True:
-        choice = choices()
-
-        if choice == 0:
-            break
-
-        if choice == 1:
-            rows1, cols1 = [int(i) for i in input('Enter size of first matrix: ').split()]
-            m1 = Matrix(rows1, cols1)
-            print('Enter first matrix: ')
-            m1.grab_elements()
-
-            rows2, cols2 = [int(i) for i in input('Enter size of second matrix: ').split()]
-            m2 = Matrix(rows2, cols2)
-            print('Enter second matrix: ')
-            m2.grab_elements()
-
-            print('The result is: ')
-            print(m1 + m2)
-
-        elif choice == 2:
-            rows1, cols1 = [int(i) for i in input('Enter matrix size: ').split()]
-            m1 = Matrix(rows1, cols1)
-            print('Enter matrix: ')
-            m1.grab_elements()
-
-            x = input('Enter constant:')
-            x = int(x) if '.' not in x else float(x)
-
-            print('The result is: ')
-            print(m1 * x)
-
-        elif choice == 3:
-            rows1, cols1 = [int(i) for i in input('Enter size of first matrix: ').split()]
-            m1 = Matrix(rows1, cols1)
-            print('Enter first matrix: ')
-            m1.grab_elements()
-
-            rows2, cols2 = [int(i) for i in input('Enter size of second matrix: ').split()]
-            m2 = Matrix(rows2, cols2)
-            print('Enter second matrix: ')
-            m2.grab_elements()
-
-            print('The result is: ')
-            print(m1 * m2)
-
-        elif choice == 4:
-            axis = trans_choices()
-            rows1, cols1 = [int(i) for i in input('Enter matrix size: ').split()]
-            m1 = Matrix(rows1, cols1)
-            print('Enter matrix: ')
-            m1.grab_elements()
-
-            print('The result is: ')
-            print(m1.transpose(axis))
-
-        elif choice == 5:
-            rows1, cols1 = [int(i) for i in input('Enter matrix size: ').split()]
-            m1 = Matrix(rows1, cols1)
-            print('Enter matrix: ')
-            m1.grab_elements()
-
-            print('The result is: ')
-            print(m1.determinant())
-
-        elif choice == 6:
-            rows1, cols1 = [int(i) for i in input('Enter matrix size: ').split()]
-            m1 = Matrix(rows1, cols1)
-            print('Enter matrix: ')
-            m1.grab_elements()
-
-            print('The result is: ')
-            print(m1.inverse())
-
-
-main()
