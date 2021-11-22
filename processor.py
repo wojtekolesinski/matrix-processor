@@ -1,5 +1,6 @@
 from matrix import Matrix
 
+
 def choices():
     print('1. Add matrices')
     print('2. Multiply matrix by a constant')

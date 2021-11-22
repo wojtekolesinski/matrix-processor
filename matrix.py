@@ -12,18 +12,19 @@ class Matrix:
 
     def __add__(self, other):
         # checking, if other is also a matrix
-        if isinstance(other, Matrix):
-            #  checking, if matrices can be added
-            if self.rows == other.rows and self.cols == other.cols:
-                new_matrix = Matrix(self.rows, self.cols)
-                for i in range(self.rows):
-                    for j in range(self.cols):
-                        new_matrix.matrix[i].append(self.matrix[i][j] + other.matrix[i][j])
-                return new_matrix
-            else:
-                print('ERROR')
-        else:
+        if not isinstance(other, Matrix):
             print('Object is not a matrix')
+            return
+
+        #  checking, if matrices can be added
+        if not self.rows == other.rows or not self.cols == other.cols:
+            print('ERROR')
+            return
+        new_matrix = Matrix(self.rows, self.cols)
+        for i in range(self.rows):
+            for j in range(self.cols):
+                new_matrix.matrix[i].append(self.matrix[i][j] + other.matrix[i][j])
+        return new_matrix
 
     def __mul__(self, other):
         """Multiplication function. Can handle matrix by matrix
@@ -127,7 +128,6 @@ class Matrix:
 
         adjoint = Matrix(self.rows, self.cols)
         adjoint.matrix = [[None for i in range(self.cols)] for j in range(self.rows)]
-
 
         for i in range(self.rows):
             for j in range(self.cols):
